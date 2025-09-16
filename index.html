@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ヤクザ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: #ffdd59;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #f5f5f5;
+            margin-bottom: 20px;
+        }
+        
+        .art-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .frame {
+            width: 200px;
+            height: 200px;
+            background: #8B4513;
+            border: 15px solid #A0522D;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .art {
+            width: 90%;
+            height: 90%;
+            background: linear-gradient(45deg, #ff9966, #ff5e62);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-style: italic;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .challenge-text {
+            text-align: center;
+            font-size: 1.3rem;
+            margin: 20px 0;
+            line-height: 1.6;
+            color: #ffdd59;
+        }
+        
+        .input-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        #ans {
+            width: 300px;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        
+        button {
+            padding: 15px 25px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        .hint {
+            text-align: center;
+            margin-top: 20px;
+            color: #ccc;
+            font-size: 1rem;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            max-width: 90%;
+            width: 500px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            transform: scale(0.7);
+            transition: transform 0.5s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #ffdd59;
+        }
+        
+        .modal p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .modal button {
+            background: #ffdd59;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal button:hover {
+            background: #ffd32a;
+            transform: translateY(-3px);
+        }
+        
+        .pi-digits {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .challenge-text {
+                font-size: 1.1rem;
+            }
+            
+            #ans {
+                width: 70%;
+            }
+            
+            .input-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 70%;
+                border-radius: 8px;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ヤクザ</h1>
+        </header>
+        
+        
+        <p class="challenge-text">
+            "Madonna della Seggiola explains it's inside with outside."<br>
+        </p>
+        
+        <div class="input-container">
+            <input type="text" id="ans">
+            <button onclick="checkAnswer()">Enter</button>
+        </div>
+        
+    </div>
+    
+    <div id="win-modal" class="modal">
+        <div class="modal-content">
+            <h2>Congratulations!</h2>
+            <p>You've solved the mystery of Madonna della Seggiola!</p>
+            <button onclick="window.location.href='';">Enter</button>
+        </div>
+    </div>
+    
+    <div id="lose-modal" class="modal">
+        <div class="modal-content">
+            <h2>Try Again</h2>
+            <p>The answer is wrong.</p>
+            <button onclick="location.reload()">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        const PI = 3.1415926535897932384626433832795028841971693993;
+        
+        function checkAnswer() {
+            const userInput = document.getElementById("ans").value;
+            const userValue = parseFloat(userInput);
+            
+            // Check if the value matches PI with high precision
+            if (Math.abs(userValue - PI) < 1e-15) {
+                showWinModal();
+            } else {
+                showLoseModal();
+            }
+        }
+        
+        function showWinModal() {
+            const modal = document.getElementById("win-modal");
+            modal.classList.add("active");
+        }
+        
+        function showLoseModal() {
+            const modal = document.getElementById("lose-modal");
+            modal.classList.add("active");
+        }
+        
+        function closeModal() {
+            const modals = document.querySelectorAll(".modal");
+            modals.forEach(modal => {
+                modal.classList.remove("active");
+            });
+        }
+        
+        function resetChallenge() {
+            document.getElementById("ans").value = "";
+            closeModal();
+        }
+        
+        // Close modal when clicking outside content
+        document.querySelectorAll(".modal").forEach(modal => {
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
